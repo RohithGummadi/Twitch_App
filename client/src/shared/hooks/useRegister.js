@@ -1,48 +1,40 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { register as registerRequest } from "../../api/api.js";
+import { useNavigate } from "react-router-dom";
+import { register as registerRequest } from "../../api";
 import toast from "react-hot-toast";
 
-
 export const useRegister = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-    const register = async (email, password, username) => {
-        setIsLoading(true);
+  const navigate = useNavigate();
 
-        try {
-            const response = await registerRequest({ email, password, username });
-            setIsLoading(false);
+  const register = async (email, password, username) => {
+    setIsLoading(true);
 
-            if (response.error) {
-                return toast.error(response?.exception?.response?.data || "Error occured while Registering. Please try again")
+    const response = await registerRequest({
+      email,
+      password,
+      username,
+    });
 
-            }
+    setIsLoading(false);
 
-            if (!response || !response.data) {
-                console.error("Response data is undefined");
-                return; 
-            }
+    if (response.error) {
+      return toast.error(
+        response.exception?.response?.data ||
+          "Error occured while signing up. Please try again"
+      );
+    }
 
-            const { userDetails } = response.data;
+    const { userDetails } = response.data;
 
-            if (!userDetails) {
-                console.error("User details are missing in the response data");
-                return; 
-            }
+    localStorage.setItem("user", JSON.stringify(userDetails));
 
-            localStorage.setItem("user", JSON.stringify(userDetails));
+    navigate("/channels");
+  };
 
-            navigate("/");
-        } catch (error) {
-            setIsLoading(false);
-            console.error("Login failed:", error);
-        }
-    };
-
-    return {
-        register,
-        isLoading,
-    };
+  return {
+    register,
+    isLoading,
+  };
 };

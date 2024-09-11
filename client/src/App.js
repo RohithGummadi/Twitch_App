@@ -1,11 +1,10 @@
-import {Toaster} from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
-export const App= ({children})=>{
+export const App = ({ children }) => {
   return (
     <>
       {children}
-      <Toaster position="bottom-right" reverseOrder={false}/>
-
+      <Toaster position="bottom-right" reverseOrder={false} />
     </>
-  )
-}
+  );
+};

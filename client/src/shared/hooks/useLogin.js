@@ -1,47 +1,39 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { login as loginRequest } from "../../api/api.js";
+import { useNavigate } from "react-router-dom";
+import { login as loginRequest } from "../../api";
 import toast from "react-hot-toast";
 
 export const useLogin = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-    const login = async (email, password) => {
-        setIsLoading(true);
+  const navigate = useNavigate();
 
-        try {
-            const response = await loginRequest({ email, password });
-            setIsLoading(false);
+  const login = async (email, password) => {
+    setIsLoading(true);
 
-            if (response.error) {
-                return toast.error(response?.exception?.response?.data || "Error occured while logging in. Please try again")
-                 
-            }
+    const response = await loginRequest({
+      email,
+      password,
+    });
 
-            if (!response || !response.data) {
-                console.error("Response data is undefined");
-                return; 
-            }
+    setIsLoading(false);
 
-            const { userDetails } = response.data;
+    if (response.error) {
+      return toast.error(
+        response.exception?.response?.data ||
+          "Error occured while loggin in. Please try again"
+      );
+    }
 
-            if (!userDetails) {
-                console.error("User details are missing in the response data");
-                return; 
-            }
+    const { userDetails } = response.data;
 
-            localStorage.setItem("user", JSON.stringify(userDetails));
+    localStorage.setItem("user", JSON.stringify(userDetails));
 
-            navigate("/");
-        } catch (error) {
-            setIsLoading(false);
-            console.error("Login failed:", error);
-        }
-    };
+    navigate("/channels");
+  };
 
-    return {
-        login,
-        isLoading,
-    };
+  return {
+    login,
+    isLoading,
+  };
 };

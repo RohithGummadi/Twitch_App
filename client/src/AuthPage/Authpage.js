@@ -1,21 +1,23 @@
-import React, {useState} from 'react'
-import Login from './Login.js'
-import Register from './Register.js'
-import "../styles/authPage.css"
+import React, { useState } from "react";
+import { Login } from "./Login";
+import { Register } from "./Register";
 
+import "./authPage.css";
 
-export default function Authpage() {
-    const [isLogin, setIsLogin] = useState(true)
+export const AuthPage = () => {
+  const [isLogin, setIsLogin] = useState(true);
 
-    const handlerAuthPageToggle =()=>{
-        setIsLogin((prev)=>!prev)
-    }
+  const handleAuthPageToggle = () => {
+    setIsLogin((prev) => !prev);
+  };
+
   return (
-    <div className='auth-container'>
-        <div>
-        {isLogin ? <Login switchAuthHandler={handlerAuthPageToggle}/> : <Register switchAuthHandler={handlerAuthPageToggle}/>}
-        </div>
-
+    <div className="auth-container">
+      {isLogin ? (
+        <Login switchAuthHandler={handleAuthPageToggle} />
+      ) : (
+        <Register switchAuthHandler={handleAuthPageToggle} />
+      )}
     </div>
-  )
-}
+  );
+};
